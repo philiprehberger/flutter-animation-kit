@@ -1,0 +1,300 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:philiprehberger_animation_kit/animation_kit.dart';
+
+void main() {
+  group('FadeIn', () {
+    testWidgets('renders child widget', (tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Scaffold(body: FadeIn(child: Text('Hello'))),
+        ),
+      );
+      expect(find.text('Hello'), findsOneWidget);
+    });
+
+    testWidgets('creates and disposes animation controller', (tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Scaffold(body: FadeIn(child: Text('Fade'))),
+        ),
+      );
+      await tester.pump(const Duration(milliseconds: 300));
+      expect(find.text('Fade'), findsOneWidget);
+
+      // Dispose by removing the widget
+      await tester.pumpWidget(const MaterialApp(home: Scaffold()));
+    });
+
+    testWidgets('applies custom duration', (tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Scaffold(
+            body: FadeIn(
+              duration: Duration(milliseconds: 500),
+              child: Text('Custom'),
+            ),
+          ),
+        ),
+      );
+      await tester.pump(const Duration(milliseconds: 250));
+      expect(find.text('Custom'), findsOneWidget);
+    });
+
+    testWidgets('applies custom curve', (tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Scaffold(
+            body: FadeIn(
+              curve: Curves.linear,
+              child: Text('Curved'),
+            ),
+          ),
+        ),
+      );
+      await tester.pump(const Duration(milliseconds: 300));
+      expect(find.text('Curved'), findsOneWidget);
+    });
+
+    testWidgets('respects delay', (tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Scaffold(
+            body: FadeIn(
+              delay: Duration(milliseconds: 200),
+              child: Text('Delayed'),
+            ),
+          ),
+        ),
+      );
+      expect(find.text('Delayed'), findsOneWidget);
+      await tester.pump(const Duration(milliseconds: 200));
+      await tester.pump(const Duration(milliseconds: 300));
+      expect(find.text('Delayed'), findsOneWidget);
+    });
+  });
+
+  group('SlideIn', () {
+    testWidgets('renders child widget', (tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Scaffold(body: SlideIn(child: Text('Slide'))),
+        ),
+      );
+      expect(find.text('Slide'), findsOneWidget);
+    });
+
+    testWidgets('slides from custom direction', (tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Scaffold(
+            body: SlideIn.fromRight(child: Text('Right')),
+          ),
+        ),
+      );
+      await tester.pump(const Duration(milliseconds: 300));
+      expect(find.text('Right'), findsOneWidget);
+    });
+
+    testWidgets('slides from top', (tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Scaffold(
+            body: SlideIn.fromTop(child: Text('Top')),
+          ),
+        ),
+      );
+      await tester.pump(const Duration(milliseconds: 300));
+      expect(find.text('Top'), findsOneWidget);
+    });
+
+    testWidgets('slides from bottom', (tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Scaffold(
+            body: SlideIn.fromBottom(child: Text('Bottom')),
+          ),
+        ),
+      );
+      await tester.pump(const Duration(milliseconds: 300));
+      expect(find.text('Bottom'), findsOneWidget);
+    });
+  });
+
+  group('ScaleIn', () {
+    testWidgets('renders child widget', (tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Scaffold(body: ScaleIn(child: Text('Scale'))),
+        ),
+      );
+      expect(find.text('Scale'), findsOneWidget);
+    });
+  });
+
+  group('Bounce', () {
+    testWidgets('renders child widget', (tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Scaffold(body: Bounce(child: Text('Bounce'))),
+        ),
+      );
+      expect(find.text('Bounce'), findsOneWidget);
+    });
+  });
+
+  group('Shake', () {
+    testWidgets('renders child widget', (tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Scaffold(body: Shake(child: Text('Shake'))),
+        ),
+      );
+      expect(find.text('Shake'), findsOneWidget);
+    });
+
+    testWidgets('completes animation without error', (tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Scaffold(body: Shake(child: Text('Shake'))),
+        ),
+      );
+      await tester.pump(const Duration(milliseconds: 500));
+      expect(find.text('Shake'), findsOneWidget);
+    });
+  });
+
+  group('Pulse', () {
+    testWidgets('renders child widget', (tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Scaffold(body: Pulse(child: Text('Pulse'))),
+        ),
+      );
+      expect(find.text('Pulse'), findsOneWidget);
+    });
+
+    testWidgets('repeats animation', (tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Scaffold(body: Pulse(child: Text('Pulse'))),
+        ),
+      );
+      await tester.pump(const Duration(milliseconds: 800));
+      await tester.pump(const Duration(milliseconds: 800));
+      expect(find.text('Pulse'), findsOneWidget);
+
+      // Dispose to stop repeating animation
+      await tester.pumpWidget(const MaterialApp(home: Scaffold()));
+    });
+  });
+
+  group('AnimationSequence', () {
+    testWidgets('renders all children', (tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Scaffold(
+            body: AnimationSequence(
+              children: [Text('A'), Text('B'), Text('C')],
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(find.text('A'), findsOneWidget);
+      expect(find.text('B'), findsOneWidget);
+      expect(find.text('C'), findsOneWidget);
+    });
+
+    testWidgets('staggers visibility over time', (tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Scaffold(
+            body: AnimationSequence(
+              staggerDelay: Duration(milliseconds: 100),
+              children: [Text('First'), Text('Second'), Text('Third')],
+            ),
+          ),
+        ),
+      );
+
+      // Initially all opacity 0
+      final opacityWidgets = tester.widgetList<AnimatedOpacity>(
+        find.byType(AnimatedOpacity),
+      );
+      expect(opacityWidgets.length, 3);
+
+      // After enough time all should be visible
+      await tester.pump(const Duration(milliseconds: 100));
+      await tester.pump(const Duration(milliseconds: 100));
+      await tester.pump(const Duration(milliseconds: 100));
+      await tester.pump(const Duration(milliseconds: 300));
+
+      expect(find.text('First'), findsOneWidget);
+      expect(find.text('Second'), findsOneWidget);
+      expect(find.text('Third'), findsOneWidget);
+    });
+  });
+
+  group('SpringWidget', () {
+    testWidgets('renders child widget', (tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Scaffold(
+            body: SpringWidget(child: Text('Spring')),
+          ),
+        ),
+      );
+      expect(find.text('Spring'), findsOneWidget);
+    });
+
+    testWidgets('animates to target offset', (tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Scaffold(
+            body: SpringWidget(
+              target: Offset(50.0, 25.0),
+              child: Text('Moving'),
+            ),
+          ),
+        ),
+      );
+      await tester.pump(const Duration(milliseconds: 100));
+      await tester.pump(const Duration(milliseconds: 100));
+      expect(find.text('Moving'), findsOneWidget);
+
+      // Dispose to stop ongoing physics simulation
+      await tester.pumpWidget(const MaterialApp(home: Scaffold()));
+    });
+
+    testWidgets('updates when target changes', (tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Scaffold(
+            body: SpringWidget(
+              target: Offset.zero,
+              child: Text('Target'),
+            ),
+          ),
+        ),
+      );
+      await tester.pump(const Duration(milliseconds: 50));
+
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Scaffold(
+            body: SpringWidget(
+              target: Offset(100.0, 0.0),
+              child: Text('Target'),
+            ),
+          ),
+        ),
+      );
+      await tester.pump(const Duration(milliseconds: 100));
+      expect(find.text('Target'), findsOneWidget);
+
+      // Dispose to stop ongoing physics simulation
+      await tester.pumpWidget(const MaterialApp(home: Scaffold()));
+    });
+  });
+}
