@@ -116,24 +116,82 @@ void _sequenceExample() {}
 /// ```
 void _springExample() {}
 
+/// Animated visibility toggle.
+///
+/// ```dart
+/// AnimatedVisibility(
+///   visible: _isVisible,
+///   duration: Duration(milliseconds: 300),
+///   child: Text('Toggle me'),
+/// )
+/// ```
+void _animatedVisibilityExample() {}
+
+/// Animation chain for sequential reveals.
+///
+/// ```dart
+/// AnimationChain(
+///   stepDuration: Duration(milliseconds: 400),
+///   children: [
+///     Text('Step 1'),
+///     Text('Step 2'),
+///     Text('Step 3'),
+///   ],
+/// )
+/// ```
+void _animationChainExample() {}
+
+/// Repeat animation with count.
+///
+/// ```dart
+/// RepeatAnimation(
+///   count: 3,
+///   reverse: true,
+///   child: Icon(Icons.notifications, size: 32),
+/// )
+/// ```
+void _repeatAnimationExample() {}
+
 /// Full app example combining multiple animations.
-class ExampleApp extends StatelessWidget {
+class ExampleApp extends StatefulWidget {
   const ExampleApp({super.key});
+
+  @override
+  State<ExampleApp> createState() => _ExampleAppState();
+}
+
+class _ExampleAppState extends State<ExampleApp> {
+  bool _showMessage = true;
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(title: const Text('Animation Kit Demo')),
-        body: const Padding(
-          padding: EdgeInsets.all(24.0),
-          child: AnimationSequence(
-            staggerDelay: Duration(milliseconds: 200),
+        body: Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              FadeIn(child: Text('Fade in')),
-              SlideIn.fromLeft(child: Text('Slide from left')),
-              ScaleIn(child: Text('Scale in')),
-              Bounce(child: Text('Bounce')),
+              const AnimationSequence(
+                staggerDelay: Duration(milliseconds: 200),
+                children: [
+                  FadeIn(child: Text('Fade in')),
+                  SlideIn.fromLeft(child: Text('Slide from left')),
+                  ScaleIn(child: Text('Scale in')),
+                  Bounce(child: Text('Bounce')),
+                ],
+              ),
+              const SizedBox(height: 24),
+              ElevatedButton(
+                onPressed: () => setState(() => _showMessage = !_showMessage),
+                child: const Text('Toggle visibility'),
+              ),
+              const SizedBox(height: 8),
+              AnimatedVisibility(
+                visible: _showMessage,
+                child: const Text('Now you see me'),
+              ),
             ],
           ),
         ),
