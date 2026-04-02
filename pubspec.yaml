@@ -1,0 +1,25 @@
+name: philiprehberger_animation_kit
+description: >-
+  Prebuilt animation primitives with timeline sequencing and spring physics
+version: 0.1.0
+homepage: https://philiprehberger.com/open-source-packages/dart/philiprehberger_animation_kit
+repository: https://github.com/philiprehberger/flutter-animation-kit
+issue_tracker: https://github.com/philiprehberger/flutter-animation-kit/issues
+
+topics:
+  - animation
+  - widgets
+  - effects
+
+environment:
+  sdk: ^3.6.0
+  flutter: ">=3.24.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
