@@ -17,7 +17,7 @@ Add to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  philiprehberger_animation_kit: ^0.1.0
+  philiprehberger_animation_kit: ^0.2.0
 ```
 
 Then run:
@@ -85,6 +85,49 @@ Pulse(
 )
 ```
 
+### Reverse & onComplete
+
+```dart
+FadeIn(
+  reverse: true,
+  onComplete: () => print('Done!'),
+  child: Text('Fading out'),
+)
+```
+
+### Animation Chain
+
+```dart
+AnimationChain(
+  stepDuration: Duration(milliseconds: 400),
+  children: [
+    Text('Step 1'),
+    Text('Step 2'),
+    Text('Step 3'),
+  ],
+)
+```
+
+### Repeat Animation
+
+```dart
+RepeatAnimation(
+  count: 3,
+  reverse: true,
+  child: Icon(Icons.notifications, size: 32),
+)
+```
+
+### Animated Visibility
+
+```dart
+AnimatedVisibility(
+  visible: _isVisible,
+  duration: Duration(milliseconds: 300),
+  child: Text('Now you see me'),
+)
+```
+
 ### Animation Sequence
 
 ```dart
@@ -126,6 +169,9 @@ SpringWidget(
 | `Bounce` | Scale with elastic overshoot (Curves.elasticOut) |
 | `Shake` | Horizontal shake using sine-based offset with decay |
 | `Pulse` | Repeating scale animation (grows and shrinks) |
+| `AnimationChain` | Sequential multi-child animations with fade and slide |
+| `RepeatAnimation` | Looping opacity animation with optional repeat count |
+| `AnimatedVisibility` | Boolean-driven fade in/out with layout removal |
 | `AnimationSequence` | Staggered reveal of child widgets in sequence |
 | `SpringWidget` | Spring physics positioning with configurable stiffness and damping |
 

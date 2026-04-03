@@ -16,6 +16,12 @@ class FadeIn extends StatefulWidget {
   /// Delay before the animation starts.
   final Duration delay;
 
+  /// Whether to run the animation in reverse (fade out).
+  final bool reverse;
+
+  /// Called when the animation completes.
+  final VoidCallback? onComplete;
+
   /// Create a [FadeIn] animation.
   const FadeIn({
     super.key,
@@ -23,6 +29,8 @@ class FadeIn extends StatefulWidget {
     this.duration = const Duration(milliseconds: 300),
     this.curve = Curves.easeIn,
     this.delay = Duration.zero,
+    this.reverse = false,
+    this.onComplete,
   });
 
   @override
@@ -38,11 +46,24 @@ class _FadeInState extends State<FadeIn> with SingleTickerProviderStateMixin {
     super.initState();
     _controller = AnimationController(vsync: this, duration: widget.duration);
     _animation = CurvedAnimation(parent: _controller, curve: widget.curve);
+    if (widget.onComplete != null) {
+      _controller.addStatusListener((status) {
+        if (status == AnimationStatus.completed ||
+            status == AnimationStatus.dismissed) {
+          widget.onComplete!();
+        }
+      });
+    }
+    if (widget.reverse) {
+      _controller.value = 1.0;
+    }
     if (widget.delay == Duration.zero) {
-      _controller.forward();
+      widget.reverse ? _controller.reverse() : _controller.forward();
     } else {
       Future.delayed(widget.delay, () {
-        if (mounted) _controller.forward();
+        if (mounted) {
+          widget.reverse ? _controller.reverse() : _controller.forward();
+        }
       });
     }
   }
@@ -76,6 +97,12 @@ class SlideIn extends StatefulWidget {
   /// Starting offset for the slide. Defaults to sliding in from the left.
   final Offset begin;
 
+  /// Whether to run the animation in reverse (slide out).
+  final bool reverse;
+
+  /// Called when the animation completes.
+  final VoidCallback? onComplete;
+
   /// Create a [SlideIn] animation.
   const SlideIn({
     super.key,
@@ -84,6 +111,8 @@ class SlideIn extends StatefulWidget {
     this.curve = Curves.easeOut,
     this.delay = Duration.zero,
     this.begin = const Offset(-1.0, 0.0),
+    this.reverse = false,
+    this.onComplete,
   });
 
   /// Slide in from the left.
@@ -93,6 +122,8 @@ class SlideIn extends StatefulWidget {
     this.duration = const Duration(milliseconds: 300),
     this.curve = Curves.easeOut,
     this.delay = Duration.zero,
+    this.reverse = false,
+    this.onComplete,
   }) : begin = const Offset(-1.0, 0.0);
 
   /// Slide in from the right.
@@ -102,6 +133,8 @@ class SlideIn extends StatefulWidget {
     this.duration = const Duration(milliseconds: 300),
     this.curve = Curves.easeOut,
     this.delay = Duration.zero,
+    this.reverse = false,
+    this.onComplete,
   }) : begin = const Offset(1.0, 0.0);
 
   /// Slide in from the top.
@@ -111,6 +144,8 @@ class SlideIn extends StatefulWidget {
     this.duration = const Duration(milliseconds: 300),
     this.curve = Curves.easeOut,
     this.delay = Duration.zero,
+    this.reverse = false,
+    this.onComplete,
   }) : begin = const Offset(0.0, -1.0);
 
   /// Slide in from the bottom.
@@ -120,6 +155,8 @@ class SlideIn extends StatefulWidget {
     this.duration = const Duration(milliseconds: 300),
     this.curve = Curves.easeOut,
     this.delay = Duration.zero,
+    this.reverse = false,
+    this.onComplete,
   }) : begin = const Offset(0.0, 1.0);
 
   @override
@@ -138,11 +175,24 @@ class _SlideInState extends State<SlideIn> with SingleTickerProviderStateMixin {
       begin: widget.begin,
       end: Offset.zero,
     ).animate(CurvedAnimation(parent: _controller, curve: widget.curve));
+    if (widget.onComplete != null) {
+      _controller.addStatusListener((status) {
+        if (status == AnimationStatus.completed ||
+            status == AnimationStatus.dismissed) {
+          widget.onComplete!();
+        }
+      });
+    }
+    if (widget.reverse) {
+      _controller.value = 1.0;
+    }
     if (widget.delay == Duration.zero) {
-      _controller.forward();
+      widget.reverse ? _controller.reverse() : _controller.forward();
     } else {
       Future.delayed(widget.delay, () {
-        if (mounted) _controller.forward();
+        if (mounted) {
+          widget.reverse ? _controller.reverse() : _controller.forward();
+        }
       });
     }
   }
@@ -173,6 +223,12 @@ class ScaleIn extends StatefulWidget {
   /// Delay before the animation starts.
   final Duration delay;
 
+  /// Whether to run the animation in reverse (scale out).
+  final bool reverse;
+
+  /// Called when the animation completes.
+  final VoidCallback? onComplete;
+
   /// Create a [ScaleIn] animation.
   const ScaleIn({
     super.key,
@@ -180,6 +236,8 @@ class ScaleIn extends StatefulWidget {
     this.duration = const Duration(milliseconds: 300),
     this.curve = Curves.easeOut,
     this.delay = Duration.zero,
+    this.reverse = false,
+    this.onComplete,
   });
 
   @override
@@ -197,11 +255,24 @@ class _ScaleInState extends State<ScaleIn> with SingleTickerProviderStateMixin {
     _animation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(parent: _controller, curve: widget.curve),
     );
+    if (widget.onComplete != null) {
+      _controller.addStatusListener((status) {
+        if (status == AnimationStatus.completed ||
+            status == AnimationStatus.dismissed) {
+          widget.onComplete!();
+        }
+      });
+    }
+    if (widget.reverse) {
+      _controller.value = 1.0;
+    }
     if (widget.delay == Duration.zero) {
-      _controller.forward();
+      widget.reverse ? _controller.reverse() : _controller.forward();
     } else {
       Future.delayed(widget.delay, () {
-        if (mounted) _controller.forward();
+        if (mounted) {
+          widget.reverse ? _controller.reverse() : _controller.forward();
+        }
       });
     }
   }
@@ -232,6 +303,12 @@ class Bounce extends StatefulWidget {
   /// Delay before the animation starts.
   final Duration delay;
 
+  /// Whether to run the animation in reverse (bounce out).
+  final bool reverse;
+
+  /// Called when the animation completes.
+  final VoidCallback? onComplete;
+
   /// Create a [Bounce] animation.
   const Bounce({
     super.key,
@@ -239,6 +316,8 @@ class Bounce extends StatefulWidget {
     this.duration = const Duration(milliseconds: 600),
     this.curve = Curves.elasticOut,
     this.delay = Duration.zero,
+    this.reverse = false,
+    this.onComplete,
   });
 
   @override
@@ -256,11 +335,24 @@ class _BounceState extends State<Bounce> with SingleTickerProviderStateMixin {
     _animation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(parent: _controller, curve: widget.curve),
     );
+    if (widget.onComplete != null) {
+      _controller.addStatusListener((status) {
+        if (status == AnimationStatus.completed ||
+            status == AnimationStatus.dismissed) {
+          widget.onComplete!();
+        }
+      });
+    }
+    if (widget.reverse) {
+      _controller.value = 1.0;
+    }
     if (widget.delay == Duration.zero) {
-      _controller.forward();
+      widget.reverse ? _controller.reverse() : _controller.forward();
     } else {
       Future.delayed(widget.delay, () {
-        if (mounted) _controller.forward();
+        if (mounted) {
+          widget.reverse ? _controller.reverse() : _controller.forward();
+        }
       });
     }
   }

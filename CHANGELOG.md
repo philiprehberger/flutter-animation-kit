@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-04-02
+
+### Added
+- `reverse` parameter on `FadeIn`, `SlideIn`, `ScaleIn`, `Bounce` to run animations backward
+- `onComplete` callback on `FadeIn`, `SlideIn`, `ScaleIn`, `Bounce`
+- `AnimationChain` widget for sequential multi-child animations
+- `RepeatAnimation` widget for looping animations with optional count
+- `AnimatedVisibility` widget for boolean-driven fade in/out
+
 ## [0.1.0] - 2026-04-01
 
 ### Added
