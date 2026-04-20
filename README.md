@@ -17,7 +17,7 @@ Add to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  philiprehberger_animation_kit: ^0.2.0
+  philiprehberger_animation_kit: ^0.3.0
 ```
 
 Then run:
@@ -141,6 +141,16 @@ AnimationSequence(
 )
 ```
 
+### Animation Delay
+
+```dart
+AnimationDelay(
+  delay: Duration(milliseconds: 500),
+  duration: Duration(milliseconds: 300),
+  child: Text('Appears after 500ms'),
+)
+```
+
 ### Spring Physics
 
 ```dart
@@ -172,6 +182,7 @@ SpringWidget(
 | `AnimationChain` | Sequential multi-child animations with fade and slide |
 | `RepeatAnimation` | Looping opacity animation with optional repeat count |
 | `AnimatedVisibility` | Boolean-driven fade in/out with layout removal |
+| `AnimationDelay` | Delays child appearance then fades in with configurable duration |
 | `AnimationSequence` | Staggered reveal of child widgets in sequence |
 | `SpringWidget` | Spring physics positioning with configurable stiffness and damping |
 
