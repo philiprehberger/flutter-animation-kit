@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-04-28
+
+### Added
+- `KitCurves` preset curve constants: `gentleEntry`, `elasticBounce`, `smoothExit`, `softSpring`
+- `onStatusChanged` callback on `FadeIn`, `SlideIn`, `ScaleIn` for fine-grained animation status reactions
+
+### Fixed
+- Barrel re-export chain — `lib/philiprehberger_animation_kit.dart` now exports each `src/` file directly, with `lib/animation_kit.dart` re-exporting the primary barrel
+
 ## [0.3.0] - 2026-04-05
 
 ### Added

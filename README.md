@@ -8,7 +8,7 @@ Prebuilt animation primitives with timeline sequencing and spring physics
 
 ## Requirements
 
-- Flutter >= 3.24
+- Flutter >= 3.29
 - Dart >= 3.6
 
 ## Installation
@@ -17,7 +17,7 @@ Add to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  philiprehberger_animation_kit: ^0.3.0
+  philiprehberger_animation_kit: ^0.4.0
 ```
 
 Then run:
@@ -92,6 +92,31 @@ FadeIn(
   reverse: true,
   onComplete: () => print('Done!'),
   child: Text('Fading out'),
+)
+```
+
+### Status Callbacks
+
+```dart
+FadeIn(
+  onStatusChanged: (status) => print('Status: $status'),
+  child: Text('Tracked'),
+)
+```
+
+### Preset Curves
+
+```dart
+import 'package:philiprehberger_animation_kit/animation_kit.dart';
+
+ScaleIn(
+  curve: KitCurves.softSpring,
+  child: Icon(Icons.check_circle, size: 48),
+)
+
+SlideIn.fromBottom(
+  curve: KitCurves.gentleEntry,
+  child: Card(child: Text('Card')),
 )
 ```
 
@@ -185,6 +210,8 @@ SpringWidget(
 | `AnimationDelay` | Delays child appearance then fades in with configurable duration |
 | `AnimationSequence` | Staggered reveal of child widgets in sequence |
 | `SpringWidget` | Spring physics positioning with configurable stiffness and damping |
+| `KitCurves` | Preset `Curve` constants: `gentleEntry`, `elasticBounce`, `smoothExit`, `softSpring` |
+| `onStatusChanged` (param) | Optional `void Function(AnimationStatus)?` on `FadeIn`, `SlideIn`, `ScaleIn` for fine-grained status updates |
 
 ## Development
 

@@ -463,6 +463,101 @@ void main() {
     });
   });
 
+  group('KitCurves', () {
+    test('exposes Curve instances for each preset', () {
+      expect(KitCurves.gentleEntry, isA<Curve>());
+      expect(KitCurves.elasticBounce, isA<Curve>());
+      expect(KitCurves.smoothExit, isA<Curve>());
+      expect(KitCurves.softSpring, isA<Curve>());
+    });
+
+    test('curves transform 0 and 1 endpoints sensibly', () {
+      // Most curves should map 0 -> 0 and 1 -> 1.
+      expect(KitCurves.gentleEntry.transform(0.0), 0.0);
+      expect(KitCurves.gentleEntry.transform(1.0), closeTo(1.0, 0.0001));
+      expect(KitCurves.smoothExit.transform(0.0), 0.0);
+      expect(KitCurves.smoothExit.transform(1.0), closeTo(1.0, 0.0001));
+      expect(KitCurves.softSpring.transform(0.0), 0.0);
+      expect(KitCurves.softSpring.transform(1.0), closeTo(1.0, 0.0001));
+    });
+  });
+
+  group('onStatusChanged', () {
+    testWidgets('FadeIn fires status callback through forward animation',
+        (tester) async {
+      final statuses = <AnimationStatus>[];
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: FadeIn(
+              onStatusChanged: statuses.add,
+              child: const Text('FadeStatus'),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(statuses, contains(AnimationStatus.forward));
+      expect(statuses, contains(AnimationStatus.completed));
+    });
+
+    testWidgets('SlideIn fires status callback through forward animation',
+        (tester) async {
+      final statuses = <AnimationStatus>[];
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: SlideIn(
+              onStatusChanged: statuses.add,
+              child: const Text('SlideStatus'),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(statuses, contains(AnimationStatus.forward));
+      expect(statuses, contains(AnimationStatus.completed));
+    });
+
+    testWidgets('ScaleIn fires status callback through forward animation',
+        (tester) async {
+      final statuses = <AnimationStatus>[];
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: ScaleIn(
+              onStatusChanged: statuses.add,
+              child: const Text('ScaleStatus'),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(statuses, contains(AnimationStatus.forward));
+      expect(statuses, contains(AnimationStatus.completed));
+    });
+
+    testWidgets('FadeIn onStatusChanged fires alongside onComplete',
+        (tester) async {
+      final statuses = <AnimationStatus>[];
+      bool completed = false;
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: FadeIn(
+              onStatusChanged: statuses.add,
+              onComplete: () => completed = true,
+              child: const Text('Both'),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(completed, isTrue);
+      expect(statuses, contains(AnimationStatus.completed));
+    });
+  });
+
   group('AnimatedVisibility', () {
     testWidgets('shows child when visible is true', (tester) async {
       await tester.pumpWidget(

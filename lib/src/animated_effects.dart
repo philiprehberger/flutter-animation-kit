@@ -22,6 +22,12 @@ class FadeIn extends StatefulWidget {
   /// Called when the animation completes.
   final VoidCallback? onComplete;
 
+  /// Called whenever the underlying [AnimationController]'s status changes.
+  ///
+  /// Fires for every transition (forward, reverse, completed, dismissed),
+  /// allowing fine-grained reaction beyond just completion.
+  final void Function(AnimationStatus)? onStatusChanged;
+
   /// Create a [FadeIn] animation.
   const FadeIn({
     super.key,
@@ -31,6 +37,7 @@ class FadeIn extends StatefulWidget {
     this.delay = Duration.zero,
     this.reverse = false,
     this.onComplete,
+    this.onStatusChanged,
   });
 
   @override
@@ -41,18 +48,22 @@ class _FadeInState extends State<FadeIn> with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
   late final Animation<double> _animation;
 
+  void _handleStatus(AnimationStatus status) {
+    widget.onStatusChanged?.call(status);
+    if (widget.onComplete != null &&
+        (status == AnimationStatus.completed ||
+            status == AnimationStatus.dismissed)) {
+      widget.onComplete!();
+    }
+  }
+
   @override
   void initState() {
     super.initState();
     _controller = AnimationController(vsync: this, duration: widget.duration);
     _animation = CurvedAnimation(parent: _controller, curve: widget.curve);
-    if (widget.onComplete != null) {
-      _controller.addStatusListener((status) {
-        if (status == AnimationStatus.completed ||
-            status == AnimationStatus.dismissed) {
-          widget.onComplete!();
-        }
-      });
+    if (widget.onComplete != null || widget.onStatusChanged != null) {
+      _controller.addStatusListener(_handleStatus);
     }
     if (widget.reverse) {
       _controller.value = 1.0;
@@ -70,6 +81,9 @@ class _FadeInState extends State<FadeIn> with SingleTickerProviderStateMixin {
 
   @override
   void dispose() {
+    if (widget.onComplete != null || widget.onStatusChanged != null) {
+      _controller.removeStatusListener(_handleStatus);
+    }
     _controller.dispose();
     super.dispose();
   }
@@ -103,6 +117,12 @@ class SlideIn extends StatefulWidget {
   /// Called when the animation completes.
   final VoidCallback? onComplete;
 
+  /// Called whenever the underlying [AnimationController]'s status changes.
+  ///
+  /// Fires for every transition (forward, reverse, completed, dismissed),
+  /// allowing fine-grained reaction beyond just completion.
+  final void Function(AnimationStatus)? onStatusChanged;
+
   /// Create a [SlideIn] animation.
   const SlideIn({
     super.key,
@@ -113,6 +133,7 @@ class SlideIn extends StatefulWidget {
     this.begin = const Offset(-1.0, 0.0),
     this.reverse = false,
     this.onComplete,
+    this.onStatusChanged,
   });
 
   /// Slide in from the left.
@@ -124,6 +145,7 @@ class SlideIn extends StatefulWidget {
     this.delay = Duration.zero,
     this.reverse = false,
     this.onComplete,
+    this.onStatusChanged,
   }) : begin = const Offset(-1.0, 0.0);
 
   /// Slide in from the right.
@@ -135,6 +157,7 @@ class SlideIn extends StatefulWidget {
     this.delay = Duration.zero,
     this.reverse = false,
     this.onComplete,
+    this.onStatusChanged,
   }) : begin = const Offset(1.0, 0.0);
 
   /// Slide in from the top.
@@ -146,6 +169,7 @@ class SlideIn extends StatefulWidget {
     this.delay = Duration.zero,
     this.reverse = false,
     this.onComplete,
+    this.onStatusChanged,
   }) : begin = const Offset(0.0, -1.0);
 
   /// Slide in from the bottom.
@@ -157,6 +181,7 @@ class SlideIn extends StatefulWidget {
     this.delay = Duration.zero,
     this.reverse = false,
     this.onComplete,
+    this.onStatusChanged,
   }) : begin = const Offset(0.0, 1.0);
 
   @override
@@ -167,6 +192,15 @@ class _SlideInState extends State<SlideIn> with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
   late final Animation<Offset> _animation;
 
+  void _handleStatus(AnimationStatus status) {
+    widget.onStatusChanged?.call(status);
+    if (widget.onComplete != null &&
+        (status == AnimationStatus.completed ||
+            status == AnimationStatus.dismissed)) {
+      widget.onComplete!();
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -175,13 +209,8 @@ class _SlideInState extends State<SlideIn> with SingleTickerProviderStateMixin {
       begin: widget.begin,
       end: Offset.zero,
     ).animate(CurvedAnimation(parent: _controller, curve: widget.curve));
-    if (widget.onComplete != null) {
-      _controller.addStatusListener((status) {
-        if (status == AnimationStatus.completed ||
-            status == AnimationStatus.dismissed) {
-          widget.onComplete!();
-        }
-      });
+    if (widget.onComplete != null || widget.onStatusChanged != null) {
+      _controller.addStatusListener(_handleStatus);
     }
     if (widget.reverse) {
       _controller.value = 1.0;
@@ -199,6 +228,9 @@ class _SlideInState extends State<SlideIn> with SingleTickerProviderStateMixin {
 
   @override
   void dispose() {
+    if (widget.onComplete != null || widget.onStatusChanged != null) {
+      _controller.removeStatusListener(_handleStatus);
+    }
     _controller.dispose();
     super.dispose();
   }
@@ -229,6 +261,12 @@ class ScaleIn extends StatefulWidget {
   /// Called when the animation completes.
   final VoidCallback? onComplete;
 
+  /// Called whenever the underlying [AnimationController]'s status changes.
+  ///
+  /// Fires for every transition (forward, reverse, completed, dismissed),
+  /// allowing fine-grained reaction beyond just completion.
+  final void Function(AnimationStatus)? onStatusChanged;
+
   /// Create a [ScaleIn] animation.
   const ScaleIn({
     super.key,
@@ -238,6 +276,7 @@ class ScaleIn extends StatefulWidget {
     this.delay = Duration.zero,
     this.reverse = false,
     this.onComplete,
+    this.onStatusChanged,
   });
 
   @override
@@ -248,6 +287,15 @@ class _ScaleInState extends State<ScaleIn> with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
   late final Animation<double> _animation;
 
+  void _handleStatus(AnimationStatus status) {
+    widget.onStatusChanged?.call(status);
+    if (widget.onComplete != null &&
+        (status == AnimationStatus.completed ||
+            status == AnimationStatus.dismissed)) {
+      widget.onComplete!();
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -255,13 +303,8 @@ class _ScaleInState extends State<ScaleIn> with SingleTickerProviderStateMixin {
     _animation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(parent: _controller, curve: widget.curve),
     );
-    if (widget.onComplete != null) {
-      _controller.addStatusListener((status) {
-        if (status == AnimationStatus.completed ||
-            status == AnimationStatus.dismissed) {
-          widget.onComplete!();
-        }
-      });
+    if (widget.onComplete != null || widget.onStatusChanged != null) {
+      _controller.addStatusListener(_handleStatus);
     }
     if (widget.reverse) {
       _controller.value = 1.0;
@@ -279,6 +322,9 @@ class _ScaleInState extends State<ScaleIn> with SingleTickerProviderStateMixin {
 
   @override
   void dispose() {
+    if (widget.onComplete != null || widget.onStatusChanged != null) {
+      _controller.removeStatusListener(_handleStatus);
+    }
     _controller.dispose();
     super.dispose();
   }
